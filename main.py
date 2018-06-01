@@ -58,7 +58,7 @@ class SimpleCnnModel(nn.Module):
 
 
 def save_test_prediction(output_path, test_predictions):
-    with open(output_path, "wb") as output_file:
+    with open(output_path, "w") as output_file:
         output_file.write("\n".join(map(str, test_predictions)))
 
 
@@ -91,7 +91,6 @@ def plot_average_loss(train_average_loss_per_epoch, validation_average_loss_per_
 
 
 def train(net, optimizer, train_loader, validation_loader):
-
     train_average_loss_per_epoch = []
     validation_average_loss_per_epoch = []
 
@@ -130,14 +129,14 @@ def train(net, optimizer, train_loader, validation_loader):
 
         train_average_loss_per_epoch.append(train_average_loss)
         validation_average_loss_per_epoch.append(validation_average_loss)
-        print "[%d train] accuracy: %.3f, average loss: %.3f" % \
-              (epoch_number + 1, float(train_correct_count) / len(train_loader.sampler), train_average_loss)
-        print "[%d validation] accuracy: %.3f, average loss: %.3f" % \
+        print("[%d train] accuracy: %.3f, average loss: %.3f" %
+              (epoch_number + 1, float(train_correct_count) / len(train_loader.sampler), train_average_loss))
+        print("[%d validation] accuracy: %.3f, average loss: %.3f" %
               (epoch_number + 1, float(validation_correct_count) / len(validation_loader.sampler),
-               validation_average_loss)
+               validation_average_loss))
 
     plot_average_loss(train_average_loss_per_epoch, validation_average_loss_per_epoch)
-    print "Finished Training"
+    print("Finished Training")
 
 
 def get_confusion_matrix(labels, predictions):
@@ -166,10 +165,10 @@ def test(net, test_loader):
 
         test_loss += loss.item()
 
-    print "[test] accuracy: %.3f, average loss: %.3f" % (float(test_correct_count) / len(test_loader.dataset),
-                                                         test_loss / len(test_loader.dataset))
+    print("[test] accuracy: %.3f, average loss: %.3f" % (float(test_correct_count) / len(test_loader.dataset),
+                                                         test_loss / len(test_loader.dataset)))
 
-    print get_confusion_matrix(map(lambda x: x[1], test_loader.dataset), predictions)
+    print(get_confusion_matrix(map(lambda x: x[1], test_loader.dataset), predictions))
     save_test_prediction("test.pred", predictions)
 
 
@@ -196,7 +195,7 @@ if __name__ == "__main__":
     # net = SimpleCnnModel(INPUT_SIZE)
     net = get_resnet18_model()
 
-    print "parameters count = %d" % sum(p.numel() for p in net.parameters() if p.requires_grad)
+    print("parameters count = %d" % sum(p.numel() for p in net.parameters() if p.requires_grad))
 
     # optimizer = optim.Adam(net.parameters())
     optimizer = optim.Adam(net.fc.parameters())
